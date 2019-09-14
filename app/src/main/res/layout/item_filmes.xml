@@ -13,6 +13,7 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
+        android:foreground="?android:attr/selectableItemBackground"
         app:cardCornerRadius="14dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -21,7 +22,8 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:background="@drawable/shadow_gradient">
 
             <TextView
                 android:id="@+id/textViewTituloFilme"
@@ -30,12 +32,12 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="8dp"
-                android:textColor="@android:color/black"
+                android:textColor="@android:color/white"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toTopOf="@+id/textViewAnoFilme"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/imageView"
+                app:layout_constraintStart_toEndOf="@+id/imageViewPosterFilme"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_chainStyle="packed"
                 tools:text="Tróia" />
@@ -45,16 +47,14 @@
                 style="@style/Widget.MaterialRatingBar.RatingBar"
                 android:layout_width="120dp"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
                 android:layout_marginBottom="16dp"
+                android:isIndicator="true"
                 android:minHeight="24dp"
                 android:numStars="5"
                 android:progressTint="#FFCD00"
                 android:rating="0"
                 android:stepSize="0.1"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="@+id/textViewAnoFilme"
                 app:layout_constraintTop_toBottomOf="@+id/textViewAnoFilme"
                 app:mrb_progressTint="#FFCD00" />
@@ -63,15 +63,15 @@
                 android:id="@+id/textViewAnoFilme"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:textColor="@android:color/black"
+                android:textColor="@android:color/white"
                 app:layout_constraintBottom_toTopOf="@+id/ratingbarMovie"
                 app:layout_constraintStart_toStartOf="@+id/textViewTituloFilme"
                 app:layout_constraintTop_toBottomOf="@+id/textViewTituloFilme"
                 tools:text="2012" />
 
             <ImageView
-                android:id="@+id/imageView"
-                android:layout_width="wrap_content"
+                android:id="@+id/imageViewPosterFilme"
+                android:layout_width="74dp"
                 android:layout_height="0dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

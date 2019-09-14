@@ -5,11 +5,11 @@ import io.realm.Realm
 
 object FilmeDatabase {
 
-    fun save(consultas: MutableList<Movie>) {
+    fun save(movies: MutableList<Movie>) {
 
         Realm.getDefaultInstance().use { realm ->
             realm.beginTransaction()
-            realm.copyToRealmOrUpdate(consultas)
+            realm.copyToRealmOrUpdate(movies)
             realm.commitTransaction()
         }
     }

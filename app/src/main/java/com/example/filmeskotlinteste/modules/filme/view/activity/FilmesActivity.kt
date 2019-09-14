@@ -7,24 +7,28 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.OnScrollListener
 import androidx.recyclerview.widget.RecyclerView.VERTICAL
 import com.example.filmeskotlinteste.R
 import com.example.filmeskotlinteste.modules.filme.adapter.FilmesAdapter
-import com.example.filmeskotlinteste.modules.filme.viewmodel.FilmeViewModel
+import com.example.filmeskotlinteste.modules.filme.viewmodel.MovieViewModel
 import kotlinx.android.synthetic.main.activity_filmes.*
-import org.jetbrains.anko.startActivity
 
 class FilmesActivity : AppCompatActivity() {
 
-    val ID_CONSULTA = "ID_CONSULTA"
+    val ID_MOVIE = "ID_MOVIE"
 
-    private lateinit var consultaViewModel: FilmeViewModel
+    private var page = 1
+
+    private lateinit var movieViewModel: MovieViewModel
+    private lateinit var linearLayoutManager: LinearLayoutManager
 
     private val filmesAdapter by lazy {
         FilmesAdapter(clickListener = { idFilme ->
             Toast.makeText(this, idFilme.toString(), LENGTH_SHORT).show()
 //            startActivity<DetalhesFilmeActivity>(
-//                ID_CONSULTA to idFilme
+//                ID_MOVIE to idFilme
 //            )
         })
     }
@@ -33,7 +37,7 @@ class FilmesActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_filmes)
 
-        consultaViewModel = ViewModelProviders.of(this).get(FilmeViewModel::class.java)
+        movieViewModel = ViewModelProviders.of(this).get(MovieViewModel::class.java)
 
         setupRecyclerView()
         subscribeUI()
@@ -41,22 +45,40 @@ class FilmesActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        consultaViewModel.requestFilmes()
+        movieViewModel.requestFilmes(page)
     }
 
     private fun setupRecyclerView() {
+
+        linearLayoutManager = LinearLayoutManager(this, VERTICAL, false)
+
         with(recyclerviewMeusFilmes) {
             adapter = filmesAdapter
             setHasFixedSize(true)
-            layoutManager = LinearLayoutManager(context, VERTICAL, false)
+            layoutManager = linearLayoutManager
+
+            addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                    super.onScrollStateChanged(recyclerView, newState)
+
+                    val totalItemCount = recyclerView.layoutManager!!.itemCount
+                    val lastVisibleItemPosition = linearLayoutManager.findLastVisibleItemPosition()
+
+                    if (totalItemCount == lastVisibleItemPosition + 1) {
+                        movieViewModel.requestFilmes(page++)
+                    }
+                }
+            })
         }
     }
 
     private fun subscribeUI() {
-        with(consultaViewModel) {
+        with(movieViewModel) {
             filmes.observe(this@FilmesActivity, Observer { filmes ->
                 filmesAdapter.refresh(filmes)
             })
         }
     }
 }
+
+

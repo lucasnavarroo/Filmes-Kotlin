@@ -13,12 +13,13 @@ object FilmeNetwork : BaseNetwork() {
     var getFilmes: Disposable? = null
 
     fun requestFilmesFromAPI(
+        page: Int,
         onSuccess: (response: MutableList<Movie>) -> Unit,
         onError: (error: String) -> Unit
     ) {
         getFilmes?.dispose()
 
-        getFilmes = API.getFilmes()
+        getFilmes = API.getFilmes(page.toString())
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ filmes ->

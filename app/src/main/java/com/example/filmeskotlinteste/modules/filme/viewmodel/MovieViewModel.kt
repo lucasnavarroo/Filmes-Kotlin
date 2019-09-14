@@ -6,7 +6,7 @@ import com.example.filmeskotlinteste.core.livedata.SingleLiveEvent
 import com.example.filmeskotlinteste.modules.filme.business.FilmeBusiness
 import com.example.filmeskotlinteste.modules.filme.model.Movie
 
-class FilmeViewModel : ViewModel() {
+class MovieViewModel : ViewModel() {
 
     var filmes: MutableLiveData<List<Movie>> = MutableLiveData()
 
@@ -14,18 +14,20 @@ class FilmeViewModel : ViewModel() {
     val onLoadFinished = SingleLiveEvent<Void>()
     val onError = SingleLiveEvent<String>()
 
-    fun requestFilmes() {
+    fun requestFilmes(page: Int) {
 
         onLoadStarted.call()
 
-        FilmeBusiness.getMovies(onSuccess = { filmesRes ->
-            filmes.value = filmesRes
-            onLoadFinished.call()
-        }, onError = {error, filmesDb ->
-            onError.value = error
+        FilmeBusiness.getMovies(
+            page,
+            onSuccess = { filmesRes ->
+                filmes.value = filmesRes
+                onLoadFinished.call()
+            }, onError = { error, filmesDb ->
+                onError.value = error
 
-            filmes.value = filmesDb
-            onLoadFinished.call()
-        })
+                filmes.value = filmesDb
+                onLoadFinished.call()
+            })
     }
 }

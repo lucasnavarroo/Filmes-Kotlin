@@ -7,17 +7,21 @@ import com.example.filmeskotlinteste.modules.filme.network.FilmeNetwork
 object FilmeBusiness {
 
     fun getMovies(
+        page: Int,
         onSuccess: (movie: MutableList<Movie>) -> Unit,
         onError: (error: String, movies: MutableList<Movie>) -> Unit
     ) {
         FilmeNetwork.requestFilmesFromAPI(
+            page,
             onSuccess = { apiResponse ->
-                apiResponse?.let { filmesRes ->
+                apiResponse?.let { moviesRes ->
 
-                    FilmeDatabase.clear()
-                    FilmeDatabase.save(filmesRes)
+                    if(page == 1) FilmeDatabase.clear()
 
-                    onSuccess(filmesRes)
+                    FilmeDatabase.save(moviesRes)
+                    val moviesDb = FilmeDatabase.get()
+
+                    onSuccess(moviesDb)
                 }
             },
             onError = { error ->
