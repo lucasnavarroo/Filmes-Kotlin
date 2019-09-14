@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Filmes Kotlin teste</string>
+    <string name="meus_filmes_header">Meus movies</string>
+</resources>
