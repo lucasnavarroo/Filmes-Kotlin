@@ -1,10 +1,12 @@
 package com.example.filmeskotlinteste.modules.movie.view.activity
 
+import android.app.Activity
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.View.GONE
 import android.view.View.VISIBLE
+import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.MenuItemCompat
@@ -28,7 +30,6 @@ class MoviesActivity : AppCompatActivity() {
     private var page = 1
 
     private lateinit var movieViewModel: MovieViewModel
-    //    private lateinit var searchMovieViewModel: SearchMovieViewModel
     private lateinit var searchView: SearchView
 
     private lateinit var linearLayoutManager: LinearLayoutManager
@@ -105,19 +106,35 @@ class MoviesActivity : AppCompatActivity() {
                     if (totalItemCount == lastVisibleItemPosition + 1) {
                         movieViewModel.requestMovies(page++)
                     }
+
+                    hideSoftKeyboard()
                 }
             })
         }
     }
 
+    private fun hideSoftKeyboard() {
+        val inputMethodManager = this.getSystemService(
+            Activity.INPUT_METHOD_SERVICE
+        ) as InputMethodManager
+
+        inputMethodManager.hideSoftInputFromWindow(
+            this.currentFocus?.windowToken, 0
+        )
+    }
+
     private fun configSwipeRefresh() {
         swiperefreshMovies.setOnRefreshListener {
-            movieViewModel.requestMovies(1)
+            if (!movieViewModel.isSearch) movieViewModel.requestMovies(1)
         }
     }
 
     private fun subscribeUI() {
         with(movieViewModel) {
+
+            onLoadStarted.observe(this@MoviesActivity, Observer {
+                textViewEmptySearch.visibility = GONE
+            })
 
             onLoadMoreStarted.observe(this@MoviesActivity, Observer {
                 progressBarLoadMore.visibility = VISIBLE
@@ -129,6 +146,10 @@ class MoviesActivity : AppCompatActivity() {
                 swiperefreshMovies.isRefreshing = false
             })
 
+            onEmptySearch.observe(this@MoviesActivity, Observer {
+                textViewEmptySearch.visibility = VISIBLE
+            })
+
             onError.observe(this@MoviesActivity, Observer { errorMessage ->
                 Log.d("MOVIES-ERROR", errorMessage)
             })
@@ -137,13 +158,6 @@ class MoviesActivity : AppCompatActivity() {
                 filmesAdapter.refresh(movies)
             })
         }
-
-//        with(searchMovieViewModel) {
-//
-//            movies.observe(this@MoviesActivity, Observer {movies ->
-//                filmesAdapter.refresh(movies)
-//            })
-//        }
     }
 }
 

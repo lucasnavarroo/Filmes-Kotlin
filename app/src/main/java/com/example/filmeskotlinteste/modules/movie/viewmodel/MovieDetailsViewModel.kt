@@ -3,7 +3,7 @@ package com.example.filmeskotlinteste.modules.movie.viewmodel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.filmeskotlinteste.core.livedata.SingleLiveEvent
-import com.example.filmeskotlinteste.modules.movie.business.MovieBusiness
+import com.example.filmeskotlinteste.modules.movie.business.MovieDetailsBusiness
 import com.example.filmeskotlinteste.modules.movie.model.MovieDetails
 
 class MovieDetailsViewModel : ViewModel() {
@@ -14,11 +14,18 @@ class MovieDetailsViewModel : ViewModel() {
     val onError = SingleLiveEvent<String>()
 
     fun requestMovie(movieId: Int) {
-        MovieBusiness.getMovie(movieId, onSuccess = { movieDetails ->
+        MovieDetailsBusiness.getMovieDetails(movieId, onSuccess = { movieDetails ->
+
             movie.value = movieDetails
             onLoadFinished.call()
-        }, onError = { errorMessage ->
+
+        }, onError = { errorMessage, movieDb ->
+
             onError.value = errorMessage
+
+            movie.value = movieDb
+
+            onLoadFinished.call()
         })
     }
 }

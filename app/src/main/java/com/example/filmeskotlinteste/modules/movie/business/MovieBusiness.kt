@@ -1,6 +1,7 @@
 package com.example.filmeskotlinteste.modules.movie.business
 
 import com.example.filmeskotlinteste.modules.movie.database.MovieDatabase
+import com.example.filmeskotlinteste.modules.movie.database.MovieDetailsDatabase
 import com.example.filmeskotlinteste.modules.movie.model.Movie
 import com.example.filmeskotlinteste.modules.movie.model.MovieDetails
 import com.example.filmeskotlinteste.modules.movie.network.MovieNetwork
@@ -32,18 +33,6 @@ object MovieBusiness {
                 onError(error, moviesDb)
             }
         )
-    }
-
-    fun getMovie(
-        movieId: Int,
-        onSuccess: (movie: MovieDetails) -> Unit,
-        onError: (error: String) -> Unit
-    ) {
-        MovieNetwork.getMovieDetailsFromAPI(movieId.toString(), onSuccess = {
-            onSuccess(it)
-        }, onError = {
-            onError(it)
-        })
     }
 
     fun searchMovies(

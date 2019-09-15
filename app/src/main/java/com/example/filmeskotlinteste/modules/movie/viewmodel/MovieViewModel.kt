@@ -20,7 +20,7 @@ class MovieViewModel : ViewModel() {
     var isSearch = false
 
     fun requestMovies(page: Int) {
-        if(!isSearch) {
+        if (!isSearch) {
             if (page > 1) onLoadMoreStarted.call()
 
             MovieBusiness.getMovies(
@@ -43,7 +43,7 @@ class MovieViewModel : ViewModel() {
         MovieBusiness.searchMovies(
             query,
             onSuccess = { moviesRes ->
-                //                if(moviesRes.size == 0) onEmptySearch.call()
+                if (moviesRes.size == 0) onEmptySearch.call()
                 movies.value = moviesRes
                 onLoadFinished.call()
             }, onError = { error ->

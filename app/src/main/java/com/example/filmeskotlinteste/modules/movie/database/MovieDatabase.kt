@@ -25,10 +25,4 @@ object MovieDatabase {
     fun get(): MutableList<Movie> {
         return Realm.getDefaultInstance().where(Movie::class.java).findAll()
     }
-
-    fun getMovieById(movieId: Int): Movie? {
-        Realm.getDefaultInstance().use { realm ->
-            return realm.where(Movie::class.java).equalTo("id", movieId).findFirst()
-        }
-    }
 }

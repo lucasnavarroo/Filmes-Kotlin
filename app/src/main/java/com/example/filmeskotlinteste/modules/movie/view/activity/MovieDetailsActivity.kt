@@ -1,20 +1,16 @@
 package com.example.filmeskotlinteste.modules.movie.view.activity
 
 import android.os.Bundle
-import android.widget.Toast
-import android.widget.Toast.LENGTH_SHORT
+import android.util.Log
+import android.view.View.GONE
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.bumptech.glide.Glide
 import com.example.filmeskotlinteste.R
-import com.example.filmeskotlinteste.modules.movie.database.MovieDatabase
-import com.example.filmeskotlinteste.modules.movie.model.Movie
-import com.example.filmeskotlinteste.modules.movie.model.MovieDetails
 import com.example.filmeskotlinteste.modules.movie.view.activity.MoviesActivity.Companion.ID_MOVIE
 import com.example.filmeskotlinteste.modules.movie.viewmodel.MovieDetailsViewModel
-import com.example.filmeskotlinteste.modules.movie.viewmodel.MovieViewModel
 import kotlinx.android.synthetic.main.activity_detalhes_filme.*
 
 class MovieDetailsActivity : AppCompatActivity() {
@@ -46,7 +42,15 @@ class MovieDetailsActivity : AppCompatActivity() {
     private fun subscribeUI() {
         with(movieDetailsViewModel) {
 
-            movie.observe(this@MovieDetailsActivity, Observer {movieDetails ->
+            onLoadFinished.observe(this@MovieDetailsActivity, Observer {
+                progressBarMovieDetails.visibility = GONE
+            })
+
+            onError.observe(this@MovieDetailsActivity, Observer { errorMessage ->
+                Log.d("MOVIES-ERROR", errorMessage)
+            })
+
+            movie.observe(this@MovieDetailsActivity, Observer { movieDetails ->
                 textViewDetailsMovieTitle.text = movieDetails.title
                 textViewDetailsMovieTagline.text = movieDetails.tagline
                 textViewDetailsMovieYear.text = movieDetails.releaseDate
