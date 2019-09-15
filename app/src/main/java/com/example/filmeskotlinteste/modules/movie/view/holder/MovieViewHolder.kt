@@ -4,6 +4,7 @@ import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.filmeskotlinteste.R
 import com.example.filmeskotlinteste.modules.movie.model.Movie
 import kotlinx.android.synthetic.main.item_filmes.view.*
 
@@ -23,6 +24,7 @@ class MovieViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
 
             Glide.with(view)
                 .load("https://image.tmdb.org/t/p/w500${movie.posterPath}")
+                .placeholder(R.drawable.ic_image_24dp)
                 .override(ConstraintLayout.LayoutParams.MATCH_CONSTRAINT, ConstraintLayout.LayoutParams.MATCH_CONSTRAINT)
                 .into(imageViewPosterFilme)
         }

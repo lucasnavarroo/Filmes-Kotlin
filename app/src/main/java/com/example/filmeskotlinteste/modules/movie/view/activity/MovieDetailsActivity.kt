@@ -57,6 +57,7 @@ class MovieDetailsActivity : AppCompatActivity() {
 
                 Glide.with(applicationContext)
                     .load("https://image.tmdb.org/t/p/w500${movieDetails.backdropPath}")
+                    .placeholder(R.drawable.imdb_fb_logo)
                     .override(
                         ConstraintLayout.LayoutParams.MATCH_PARENT,
                         ConstraintLayout.LayoutParams.MATCH_CONSTRAINT

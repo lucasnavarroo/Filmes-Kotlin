@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName
 import io.realm.RealmList
 import io.realm.RealmObject
 
-open class MovieResponse : RealmObject() {
+open class MoviesResponse : RealmObject() {
 
     var page: Int? = null
 

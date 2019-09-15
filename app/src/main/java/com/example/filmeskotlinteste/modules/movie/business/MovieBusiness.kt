@@ -10,9 +10,9 @@ object MovieBusiness {
     fun getMovies(
         page: Int,
         onSuccess: (movie: MutableList<Movie>) -> Unit,
-        onError: (error: String, movies: MutableList<Movie>) -> Unit
+        onError: (error: String, moviesFromDb: MutableList<Movie>) -> Unit
     ) {
-        MovieNetwork.requestFilmesFromAPI(
+        MovieNetwork.getMoviesFromAPI(
             page,
             onSuccess = { apiResponse ->
                 apiResponse.let { moviesRes ->
@@ -26,10 +26,10 @@ object MovieBusiness {
                 }
             },
             onError = { error ->
-                val filmesDb: MutableList<Movie> =
+                val moviesDb: MutableList<Movie> =
                     MovieDatabase.get()
 
-                onError(error, filmesDb)
+                onError(error, moviesDb)
             }
         )
     }
@@ -39,10 +39,22 @@ object MovieBusiness {
         onSuccess: (movie: MovieDetails) -> Unit,
         onError: (error: String) -> Unit
     ) {
-        MovieNetwork.getMovie(movieId.toString(), onSuccess = {
+        MovieNetwork.getMovieDetailsFromAPI(movieId.toString(), onSuccess = {
             onSuccess(it)
         }, onError = {
             onError(it)
+        })
+    }
+
+    fun searchMovies(
+        query: String,
+        onSuccess: (movies: MutableList<Movie>) -> Unit,
+        onError: (error: String) -> Unit
+    ) {
+        MovieNetwork.searchMoviesFromAPI(query,onSuccess = {movies ->
+            onSuccess(movies)
+        }, onError = {errorMessage ->
+            onError(errorMessage)
         })
     }
 }

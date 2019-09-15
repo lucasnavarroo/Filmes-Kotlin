@@ -2,19 +2,22 @@ package com.example.filmeskotlinteste.modules.movie.view.activity
 
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SearchView
+import androidx.core.view.MenuItemCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.VERTICAL
-import com.example.filmeskotlinteste.R
 import com.example.filmeskotlinteste.modules.movie.adapter.MoviesAdapter
 import com.example.filmeskotlinteste.modules.movie.viewmodel.MovieViewModel
 import kotlinx.android.synthetic.main.activity_filmes.*
 import org.jetbrains.anko.startActivity
+
 
 class MoviesActivity : AppCompatActivity() {
 
@@ -25,6 +28,9 @@ class MoviesActivity : AppCompatActivity() {
     private var page = 1
 
     private lateinit var movieViewModel: MovieViewModel
+    //    private lateinit var searchMovieViewModel: SearchMovieViewModel
+    private lateinit var searchView: SearchView
+
     private lateinit var linearLayoutManager: LinearLayoutManager
 
     private val filmesAdapter by lazy {
@@ -37,7 +43,7 @@ class MoviesActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_filmes)
+        setContentView(com.example.filmeskotlinteste.R.layout.activity_filmes)
 
         movieViewModel = ViewModelProviders.of(this).get(MovieViewModel::class.java)
 
@@ -49,7 +55,35 @@ class MoviesActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        movieViewModel.requestFilmes(page)
+        movieViewModel.requestMovies(page)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        val inflater = menuInflater
+        inflater.inflate(com.example.filmeskotlinteste.R.menu.menu, menu)
+
+        val searchItem = menu.findItem(com.example.filmeskotlinteste.R.id.action_search)
+        searchView = MenuItemCompat.getActionView(searchItem) as SearchView
+        searchView.setOnQueryTextListener(onQueryTextListener)
+
+        return true
+    }
+
+    private val onQueryTextListener = object : SearchView.OnQueryTextListener {
+        override fun onQueryTextSubmit(query: String): Boolean {
+            return true
+        }
+
+        override fun onQueryTextChange(query: String): Boolean {
+            if (query.trim() == "") {
+                movieViewModel.isSearch = false
+                movieViewModel.requestMovies(1)
+            } else {
+                movieViewModel.isSearch = true
+                movieViewModel.searchMovies(query)
+            }
+            return true
+        }
     }
 
     private fun setupRecyclerView() {
@@ -69,7 +103,7 @@ class MoviesActivity : AppCompatActivity() {
                     val lastVisibleItemPosition = linearLayoutManager.findLastVisibleItemPosition()
 
                     if (totalItemCount == lastVisibleItemPosition + 1) {
-                        movieViewModel.requestFilmes(page++)
+                        movieViewModel.requestMovies(page++)
                     }
                 }
             })
@@ -78,7 +112,7 @@ class MoviesActivity : AppCompatActivity() {
 
     private fun configSwipeRefresh() {
         swiperefreshMovies.setOnRefreshListener {
-            movieViewModel.requestFilmes(1)
+            movieViewModel.requestMovies(1)
         }
     }
 
@@ -103,6 +137,13 @@ class MoviesActivity : AppCompatActivity() {
                 filmesAdapter.refresh(movies)
             })
         }
+
+//        with(searchMovieViewModel) {
+//
+//            movies.observe(this@MoviesActivity, Observer {movies ->
+//                filmesAdapter.refresh(movies)
+//            })
+//        }
     }
 }
 

@@ -13,8 +13,9 @@ object MovieNetwork : BaseNetwork() {
 
     var getMovies: Disposable? = null
     var getMovie: Disposable? = null
+    var searchMovie: Disposable? = null
 
-    fun requestFilmesFromAPI(
+    fun getMoviesFromAPI(
         page: Int,
         onSuccess: (response: MutableList<Movie>) -> Unit,
         onError: (error: String) -> Unit
@@ -31,7 +32,7 @@ object MovieNetwork : BaseNetwork() {
             })
     }
 
-    fun getMovie(
+    fun getMovieDetailsFromAPI(
         movieId: String,
         onSuccess: (response: MovieDetails) -> Unit,
         onError: (error: String) -> Unit
@@ -43,6 +44,23 @@ object MovieNetwork : BaseNetwork() {
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ movie ->
                 movie?.let { onSuccess(it) }
+            }, {
+                onError(it.message.toString())
+            })
+    }
+
+    fun searchMoviesFromAPI(
+        query: String,
+        onSuccess: (response: MutableList<Movie>) -> Unit,
+        onError: (error: String) -> Unit
+    ) {
+        searchMovie?.dispose()
+
+        searchMovie = API.searchMovies(query)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({ movies ->
+                movies.results?.let { onSuccess(it) }
             }, {
                 onError(it.message.toString())
             })

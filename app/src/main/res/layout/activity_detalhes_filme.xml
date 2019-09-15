@@ -74,8 +74,9 @@
 
             <TextView
                 android:id="@+id/textViewDetailsMovieTagline"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
                 android:text="You'll Float Again"
                 android:textColor="@android:color/white"
                 android:textSize="14sp"
@@ -114,6 +115,7 @@
                 android:id="@+id/textViewRevenue"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
                 android:textColor="@android:color/white"
                 app:layout_constraintBottom_toBottomOf="@+id/textViewDetailsMovieYear"
                 app:layout_constraintEnd_toEndOf="parent"

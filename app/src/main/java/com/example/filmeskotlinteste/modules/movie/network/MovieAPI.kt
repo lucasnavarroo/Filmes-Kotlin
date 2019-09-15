@@ -1,7 +1,7 @@
 package com.example.filmeskotlinteste.modules.movie.network
 
 import com.example.filmeskotlinteste.modules.movie.model.MovieDetails
-import com.example.filmeskotlinteste.modules.movie.model.MovieResponse
+import com.example.filmeskotlinteste.modules.movie.model.MoviesResponse
 import io.reactivex.Observable
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -14,10 +14,15 @@ interface FilmeAPI {
     @GET("movie/popular?api_key=$api_key&language=en-US")
     fun getMovies(
         @Query("page") page: String
-    ): Observable<MovieResponse>
+    ): Observable<MoviesResponse>
 
     @GET("movie/{id}?api_key=$api_key&language=en-US")
     fun getMovie(
         @Path("id") movieId: String
     ): Observable<MovieDetails>
+
+    @GET("search/movie?api_key=$api_key&language=en-US")
+    fun searchMovies(
+        @Query("query") movieName: String
+    ): Observable<MoviesResponse>
 }
