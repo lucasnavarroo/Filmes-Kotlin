@@ -5,52 +5,65 @@ import android.widget.Toast
 import android.widget.Toast.LENGTH_SHORT
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import com.bumptech.glide.Glide
 import com.example.filmeskotlinteste.R
 import com.example.filmeskotlinteste.modules.movie.database.MovieDatabase
 import com.example.filmeskotlinteste.modules.movie.model.Movie
+import com.example.filmeskotlinteste.modules.movie.model.MovieDetails
 import com.example.filmeskotlinteste.modules.movie.view.activity.MoviesActivity.Companion.ID_MOVIE
+import com.example.filmeskotlinteste.modules.movie.viewmodel.MovieDetailsViewModel
+import com.example.filmeskotlinteste.modules.movie.viewmodel.MovieViewModel
 import kotlinx.android.synthetic.main.activity_detalhes_filme.*
 
 class MovieDetailsActivity : AppCompatActivity() {
 
-    lateinit var movie: Movie
+    private lateinit var movieDetailsViewModel: MovieDetailsViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detalhes_filme)
 
-        getMovieFromDb()
+        movieDetailsViewModel = ViewModelProviders.of(this).get(MovieDetailsViewModel::class.java)
 
-        bind()
+        subscribeUI()
 
         configBackClick()
     }
 
-    private fun getMovieFromDb() {
+    override fun onResume() {
+        super.onResume()
+
         val movieId = intent.getIntExtra(ID_MOVIE, 0)
 
         if (movieId != 0) {
-            movie = MovieDatabase.getMovieById(movieId)!!
+            movieDetailsViewModel.requestMovie(movieId)
         }
     }
 
-    private fun bind() {
-        textViewDetailsMovieTitle.text = movie.title
-        textViewDetailsMovieTagline.text = movie.tagline
-        textViewDetailsMovieYear.text = movie.releaseDate
-        textViewDetailsMovieOverview.text = movie.overview
-        textViewRevenue.text = " / U$${movie.revenue.toString()}"
 
-        ratingbarDetailsMovie.rating = (movie.voteAverage!! / 2)
+    private fun subscribeUI() {
+        with(movieDetailsViewModel) {
 
-        Glide.with(this)
-            .load("https://image.tmdb.org/t/p/w500${movie.backdropPath}")
-            .override(
-                ConstraintLayout.LayoutParams.MATCH_CONSTRAINT,
-                ConstraintLayout.LayoutParams.MATCH_CONSTRAINT
-            )
-            .into(imageViewBackgroundMovie)
+            movie.observe(this@MovieDetailsActivity, Observer {movieDetails ->
+                textViewDetailsMovieTitle.text = movieDetails.title
+                textViewDetailsMovieTagline.text = movieDetails.tagline
+                textViewDetailsMovieYear.text = movieDetails.releaseDate
+                textViewDetailsMovieOverview.text = movieDetails.overview
+                textViewRevenue.text = " - revenue: U$${movieDetails.revenue.toString()}"
+
+                ratingbarDetailsMovie.rating = (movieDetails.voteAverage!! / 2)
+
+                Glide.with(applicationContext)
+                    .load("https://image.tmdb.org/t/p/w500${movieDetails.backdropPath}")
+                    .override(
+                        ConstraintLayout.LayoutParams.MATCH_PARENT,
+                        ConstraintLayout.LayoutParams.MATCH_CONSTRAINT
+                    )
+                    .into(imageViewBackgroundMovie)
+            })
+        }
     }
 
     private fun configBackClick() {

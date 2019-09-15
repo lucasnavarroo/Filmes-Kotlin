@@ -85,10 +85,6 @@ class MoviesActivity : AppCompatActivity() {
     private fun subscribeUI() {
         with(movieViewModel) {
 
-            onLoadStarted.observe(this@MoviesActivity, Observer {
-                progressBarMovies.visibility = VISIBLE
-            })
-
             onLoadMoreStarted.observe(this@MoviesActivity, Observer {
                 progressBarLoadMore.visibility = VISIBLE
             })
@@ -99,12 +95,12 @@ class MoviesActivity : AppCompatActivity() {
                 swiperefreshMovies.isRefreshing = false
             })
 
-            onError.observe(this@MoviesActivity, Observer { msg ->
-                Log.d("MOVIES-ERROR", msg)
+            onError.observe(this@MoviesActivity, Observer { errorMessage ->
+                Log.d("MOVIES-ERROR", errorMessage)
             })
 
-            filmes.observe(this@MoviesActivity, Observer { filmes ->
-                filmesAdapter.refresh(filmes)
+            movies.observe(this@MoviesActivity, Observer { movies ->
+                filmesAdapter.refresh(movies)
             })
         }
     }

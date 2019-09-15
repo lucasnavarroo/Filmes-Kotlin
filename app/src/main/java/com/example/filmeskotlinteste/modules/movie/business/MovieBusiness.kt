@@ -2,6 +2,7 @@ package com.example.filmeskotlinteste.modules.movie.business
 
 import com.example.filmeskotlinteste.modules.movie.database.MovieDatabase
 import com.example.filmeskotlinteste.modules.movie.model.Movie
+import com.example.filmeskotlinteste.modules.movie.model.MovieDetails
 import com.example.filmeskotlinteste.modules.movie.network.MovieNetwork
 
 object MovieBusiness {
@@ -16,7 +17,7 @@ object MovieBusiness {
             onSuccess = { apiResponse ->
                 apiResponse.let { moviesRes ->
 
-                    if(page == 1) MovieDatabase.clear()
+                    if (page == 1) MovieDatabase.clear()
 
                     MovieDatabase.save(moviesRes)
                     val moviesDb = MovieDatabase.get()
@@ -31,5 +32,17 @@ object MovieBusiness {
                 onError(error, filmesDb)
             }
         )
+    }
+
+    fun getMovie(
+        movieId: Int,
+        onSuccess: (movie: MovieDetails) -> Unit,
+        onError: (error: String) -> Unit
+    ) {
+        MovieNetwork.getMovie(movieId.toString(), onSuccess = {
+            onSuccess(it)
+        }, onError = {
+            onError(it)
+        })
     }
 }

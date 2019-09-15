@@ -4,13 +4,10 @@ import com.google.gson.annotations.SerializedName
 import io.realm.RealmObject
 import io.realm.annotations.PrimaryKey
 
-open class Movie : RealmObject() {
+open class MovieDetails : RealmObject() {
 
     @PrimaryKey
     var id: Int? = null
-
-    @SerializedName("poster_path")
-    var posterPath: String? = null
 
     var title: String? = null
 
@@ -20,5 +17,13 @@ open class Movie : RealmObject() {
     @SerializedName("release_date")
     var releaseDate: String? = null
 
-//    var genres: RealmList<Genre>? = null
+    @SerializedName("backdrop_path")
+    var backdropPath: String? = null
+
+    var tagline: String? = null
+
+    var overview: String? = null
+
+    @SerializedName("revenue")
+    var revenue: Int? = null
 }

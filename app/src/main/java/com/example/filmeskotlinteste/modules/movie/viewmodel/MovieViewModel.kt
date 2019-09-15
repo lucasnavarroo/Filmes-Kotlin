@@ -8,9 +8,8 @@ import com.example.filmeskotlinteste.modules.movie.model.Movie
 
 class MovieViewModel : ViewModel() {
 
-    var filmes: MutableLiveData<List<Movie>> = MutableLiveData()
+    var movies: MutableLiveData<List<Movie>> = MutableLiveData()
 
-    val onLoadStarted = SingleLiveEvent<Void>()
     val onLoadFinished = SingleLiveEvent<Void>()
     val onLoadMoreStarted = SingleLiveEvent<Void>()
 
@@ -18,18 +17,17 @@ class MovieViewModel : ViewModel() {
 
     fun requestFilmes(page: Int) {
 
-        if(page == 1) onLoadStarted.call()
-        else onLoadMoreStarted.call()
+        if (page > 1) onLoadMoreStarted.call()
 
         MovieBusiness.getMovies(
             page,
-            onSuccess = { filmesRes ->
-                filmes.value = filmesRes
+            onSuccess = { moviesRes ->
+                movies.value = moviesRes
                 onLoadFinished.call()
-            }, onError = { error, filmesDb ->
+            }, onError = { error, moviesDb ->
                 onError.value = error
 
-                filmes.value = filmesDb
+                movies.value = moviesDb
                 onLoadFinished.call()
             })
     }
