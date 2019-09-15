@@ -14,8 +14,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.DayNight.DarkActionBar">
-        <activity android:name="com.example.filmeskotlinteste.modules.filme.view.activity.DetalhesFilmeActivity"></activity>
-        <activity android:name="com.example.filmeskotlinteste.modules.filme.view.activity.FilmesActivity">
+        <activity android:name="com.example.filmeskotlinteste.modules.movie.view.activity.MovieDetailsActivity"
+            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"></activity>
+        <activity android:name="com.example.filmeskotlinteste.modules.movie.view.activity.MoviesActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

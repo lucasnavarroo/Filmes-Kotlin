@@ -47,6 +47,7 @@
                 style="@style/Widget.MaterialRatingBar.RatingBar"
                 android:layout_width="120dp"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
                 android:layout_marginBottom="16dp"
                 android:isIndicator="true"
                 android:minHeight="24dp"
@@ -55,8 +56,7 @@
                 android:rating="0"
                 android:stepSize="0.1"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="@+id/textViewAnoFilme"
-                app:layout_constraintTop_toBottomOf="@+id/textViewAnoFilme"
+                app:layout_constraintStart_toEndOf="@+id/imageViewPosterFilme"
                 app:mrb_progressTint="#FFCD00" />
 
             <TextView
@@ -77,6 +77,16 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@mipmap/ic_launcher_round" />
+
+            <TextView
+                android:id="@+id/textViewMovieGenrer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@android:color/white"
+                app:layout_constraintBottom_toBottomOf="@+id/textViewAnoFilme"
+                app:layout_constraintStart_toEndOf="@+id/textViewAnoFilme"
+                app:layout_constraintTop_toTopOf="@+id/textViewAnoFilme"
+                tools:text=" - Ação" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>

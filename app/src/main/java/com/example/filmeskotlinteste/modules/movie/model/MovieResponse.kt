@@ -1,6 +1,5 @@
-package com.example.filmeskotlinteste.modules.filme.model
+package com.example.filmeskotlinteste.modules.movie.model
 
-import com.example.filmeskotlinteste.modules.filme.model.Movie
 import com.google.gson.annotations.SerializedName
 import io.realm.RealmList
 import io.realm.RealmObject

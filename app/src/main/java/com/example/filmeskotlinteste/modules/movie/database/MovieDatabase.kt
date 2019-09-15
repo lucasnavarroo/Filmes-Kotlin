@@ -1,9 +1,9 @@
-package com.example.filmeskotlinteste.modules.filme.database
+package com.example.filmeskotlinteste.modules.movie.database
 
-import com.example.filmeskotlinteste.modules.filme.model.Movie
+import com.example.filmeskotlinteste.modules.movie.model.Movie
 import io.realm.Realm
 
-object FilmeDatabase {
+object MovieDatabase {
 
     fun save(movies: MutableList<Movie>) {
 
@@ -24,5 +24,11 @@ object FilmeDatabase {
 
     fun get(): MutableList<Movie> {
         return Realm.getDefaultInstance().where(Movie::class.java).findAll()
+    }
+
+    fun getMovieById(movieId: Int): Movie? {
+        Realm.getDefaultInstance().use { realm ->
+            return realm.where(Movie::class.java).equalTo("id", movieId).findFirst()
+        }
     }
 }

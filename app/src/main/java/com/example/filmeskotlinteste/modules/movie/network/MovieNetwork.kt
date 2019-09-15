@@ -1,12 +1,12 @@
-package com.example.filmeskotlinteste.modules.filme.network
+package com.example.filmeskotlinteste.modules.movie.network
 
 import com.example.filmeskotlinteste.core.network.BaseNetwork
-import com.example.filmeskotlinteste.modules.filme.model.Movie
+import com.example.filmeskotlinteste.modules.movie.model.Movie
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 
-object FilmeNetwork : BaseNetwork() {
+object MovieNetwork : BaseNetwork() {
 
     private val API by lazy { getRetrofitBuilder().build().create(FilmeAPI::class.java) }
 

@@ -1,23 +1,26 @@
-package com.example.filmeskotlinteste.modules.filme.view.activity
+package com.example.filmeskotlinteste.modules.movie.view.activity
 
 import android.os.Bundle
-import android.widget.Toast
-import android.widget.Toast.LENGTH_SHORT
+import android.util.Log
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.RecyclerView.OnScrollListener
 import androidx.recyclerview.widget.RecyclerView.VERTICAL
 import com.example.filmeskotlinteste.R
-import com.example.filmeskotlinteste.modules.filme.adapter.FilmesAdapter
-import com.example.filmeskotlinteste.modules.filme.viewmodel.MovieViewModel
+import com.example.filmeskotlinteste.modules.movie.adapter.MoviesAdapter
+import com.example.filmeskotlinteste.modules.movie.viewmodel.MovieViewModel
 import kotlinx.android.synthetic.main.activity_filmes.*
+import org.jetbrains.anko.startActivity
 
-class FilmesActivity : AppCompatActivity() {
+class MoviesActivity : AppCompatActivity() {
 
-    val ID_MOVIE = "ID_MOVIE"
+    companion object {
+        const val ID_MOVIE = "ID_MOVIE"
+    }
 
     private var page = 1
 
@@ -25,11 +28,10 @@ class FilmesActivity : AppCompatActivity() {
     private lateinit var linearLayoutManager: LinearLayoutManager
 
     private val filmesAdapter by lazy {
-        FilmesAdapter(clickListener = { idFilme ->
-            Toast.makeText(this, idFilme.toString(), LENGTH_SHORT).show()
-//            startActivity<DetalhesFilmeActivity>(
-//                ID_MOVIE to idFilme
-//            )
+        MoviesAdapter(clickListener = { idFilme ->
+            startActivity<MovieDetailsActivity>(
+                ID_MOVIE to idFilme
+            )
         })
     }
 
@@ -41,6 +43,8 @@ class FilmesActivity : AppCompatActivity() {
 
         setupRecyclerView()
         subscribeUI()
+
+        configSwipeRefresh()
     }
 
     override fun onResume() {
@@ -72,9 +76,34 @@ class FilmesActivity : AppCompatActivity() {
         }
     }
 
+    private fun configSwipeRefresh() {
+        swiperefreshMovies.setOnRefreshListener {
+            movieViewModel.requestFilmes(1)
+        }
+    }
+
     private fun subscribeUI() {
         with(movieViewModel) {
-            filmes.observe(this@FilmesActivity, Observer { filmes ->
+
+            onLoadStarted.observe(this@MoviesActivity, Observer {
+                progressBarMovies.visibility = VISIBLE
+            })
+
+            onLoadMoreStarted.observe(this@MoviesActivity, Observer {
+                progressBarLoadMore.visibility = VISIBLE
+            })
+
+            onLoadFinished.observe(this@MoviesActivity, Observer {
+                progressBarMovies.visibility = GONE
+                progressBarLoadMore.visibility = GONE
+                swiperefreshMovies.isRefreshing = false
+            })
+
+            onError.observe(this@MoviesActivity, Observer { msg ->
+                Log.d("MOVIES-ERROR", msg)
+            })
+
+            filmes.observe(this@MoviesActivity, Observer { filmes ->
                 filmesAdapter.refresh(filmes)
             })
         }

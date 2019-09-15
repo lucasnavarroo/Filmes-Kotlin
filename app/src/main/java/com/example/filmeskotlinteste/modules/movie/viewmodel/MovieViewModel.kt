@@ -1,10 +1,10 @@
-package com.example.filmeskotlinteste.modules.filme.viewmodel
+package com.example.filmeskotlinteste.modules.movie.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.filmeskotlinteste.core.livedata.SingleLiveEvent
-import com.example.filmeskotlinteste.modules.filme.business.FilmeBusiness
-import com.example.filmeskotlinteste.modules.filme.model.Movie
+import com.example.filmeskotlinteste.modules.movie.business.MovieBusiness
+import com.example.filmeskotlinteste.modules.movie.model.Movie
 
 class MovieViewModel : ViewModel() {
 
@@ -12,13 +12,16 @@ class MovieViewModel : ViewModel() {
 
     val onLoadStarted = SingleLiveEvent<Void>()
     val onLoadFinished = SingleLiveEvent<Void>()
+    val onLoadMoreStarted = SingleLiveEvent<Void>()
+
     val onError = SingleLiveEvent<String>()
 
     fun requestFilmes(page: Int) {
 
-        onLoadStarted.call()
+        if(page == 1) onLoadStarted.call()
+        else onLoadMoreStarted.call()
 
-        FilmeBusiness.getMovies(
+        MovieBusiness.getMovies(
             page,
             onSuccess = { filmesRes ->
                 filmes.value = filmesRes
